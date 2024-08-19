@@ -1,9 +1,13 @@
 class Venue {
   constructor(
-    public name: string,
-    public city: string,
-    public country: string
+    private name: string,
+    private city: string,
+    private country: string
   ) {}
+
+  toString() {
+    return `${this.name} in ${this.city}, ${this.country}.`;
+  }
 }
 
 export default Venue;

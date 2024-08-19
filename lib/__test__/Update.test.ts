@@ -1,6 +1,6 @@
 import { it, expect, describe } from "vitest";
 
-import FootballUpdate from "../football/FootballUpdate";
+import FootballUpdate from "../football/Update";
 
 describe("FootballUpdate", () => {
   it("should be able to create a football update", () => {

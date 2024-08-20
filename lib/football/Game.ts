@@ -12,6 +12,9 @@ export class Game {
   private endTime: string | null = null;
   private finished: boolean = false;
   private started: boolean = false;
+  private halfTime: boolean = false;
+  private halfTimeStart: string | null = null;
+  private totalGameTime: number = 0;
 
   constructor(
     public id: string,
@@ -39,9 +42,52 @@ export class Game {
     this.startTime = new Date().toISOString();
   }
 
+  startHalfTime(): void {
+    if (!this.started || this.finished || this.halfTime) {
+      throw new Error(
+        "Game must be in progress and not in halftime to start halftime"
+      );
+    }
+    this.halfTime = true;
+    this.halfTimeStart = new Date().toISOString();
+
+    const currentTime = new Date().getTime();
+    const elapsedTime =
+      (currentTime - new Date(this.startTime!).getTime()) / 1000 / 60; // Convert to minutes
+    this.totalGameTime += Math.floor(elapsedTime);
+    this.startTime = null; // Stop the game time during halftime
+  }
+
+  endHalfTime(): void {
+    if (!this.halfTime || this.halfTimeStart === null) {
+      throw new Error("Halftime has not started yet");
+    }
+    this.halfTime = false;
+    this.startTime = new Date().toISOString(); // Restart the game time after halftime
+  }
+
   endGame(): void {
+    if (this.halfTime) {
+      throw new Error("Cannot end the game during halftime");
+    }
     this.finished = true;
     this.endTime = new Date().toISOString();
+
+    const currentTime = new Date().getTime();
+    const elapsedTime =
+      (currentTime - new Date(this.startTime!).getTime()) / 1000 / 60; // Convert to minutes
+    this.totalGameTime += Math.floor(elapsedTime);
+  }
+
+  getCurrentGameTime(): number {
+    if (!this.started) return 0;
+    if (this.halfTime || this.finished) return this.totalGameTime;
+
+    const currentTime = new Date().getTime();
+    const elapsedTime =
+      (currentTime - new Date(this.startTime!).getTime()) / 1000 / 60; // Convert to minutes
+
+    return this.totalGameTime + Math.floor(elapsedTime);
   }
 
   restartGame(): void {
@@ -52,6 +98,9 @@ export class Game {
     this.updates = [];
     this.scores[this.teamOne.getId()] = 0;
     this.scores[this.teamTwo.getId()] = 0;
+    this.totalGameTime = 0;
+    this.halfTime = false;
+    this.halfTimeStart = null;
   }
 
   addUpdate(update: Update): Update[] {
@@ -101,10 +150,11 @@ export class Game {
   }
 
   toString(): string {
+    const gameTime = this.getCurrentGameTime();
     return `${this.teamOne.getName()} ${this.getScore(
       this.teamOne.getId()
     )} vs ${this.getScore(this.teamTwo.getId())} ${this.teamTwo.getName()} ${
-      !!this.startTime ? getTime(this.startTime) + "'" : ""
+      gameTime > 0 ? `${gameTime}'` : ""
     }`;
   }
 }

@@ -35,6 +35,20 @@ class ScoreBoard {
       .map((game) => `${game}`)
       .join("\n");
   }
+
+  startHalfTime(id: string): void {
+    const game = this.games[id];
+    if (game) {
+      game.startHalfTime();
+    }
+  }
+
+  endHalfTime(id: string): void {
+    const game = this.games[id];
+    if (game) {
+      game.endHalfTime();
+    }
+  }
 }
 
 export default ScoreBoard;

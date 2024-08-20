@@ -2,12 +2,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "lib": ["es2023"],
-    "module": "node16",
     "target": "es2022",
 
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node16",
+    "module": "esnext",
+    "moduleResolution": "bundler",
 
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },

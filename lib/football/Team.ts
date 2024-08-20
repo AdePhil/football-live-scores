@@ -7,6 +7,10 @@ class Team {
     private name: string,
     private logo: string
   ) {}
+
+  getId() {
+    return this.id;
+  }
   getName() {
     return this.name;
   }

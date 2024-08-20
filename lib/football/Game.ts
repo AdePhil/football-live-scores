@@ -1,3 +1,4 @@
+import { getTime } from "../utils";
 import Player from "./Player";
 import Team from "./Team";
 import Update from "./Update";
@@ -97,6 +98,14 @@ export class Game {
 
   getScore(teamId: string): number {
     return this.scores[teamId];
+  }
+
+  toString(): string {
+    return `${this.teamOne.getName()} ${this.getScore(
+      this.teamOne.getId()
+    )} vs ${this.getScore(this.teamTwo.getId())} ${this.teamTwo.getName()} ${
+      !!this.startTime ? getTime(this.startTime) + "'" : ""
+    }`;
   }
 }
 

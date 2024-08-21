@@ -27,7 +27,7 @@ A simple library for live football updates.
 - Game is removed from scoreboard after game ends.
 - Records minutes played so far.
 - Handles half time breaks.
-- Handle game restart.
+- Handles game restart.
 - Sort game scores by total score and reverse order of addition.
 
 ## Future improvements

@@ -20,6 +20,29 @@ describe("Game", () => {
     expect(game.isGameOn()).toBe(true);
   });
 
+  it("should not be able to start a game if it has been started before", () => {
+    const spain = new Team("spain", [], "Spain", "logo.png");
+    const brazil = new Team("brazil", [], "Brazil", "logo.png");
+
+    const game = new Game("game1", spain, brazil);
+    game.startGame();
+    expect(() => game.startGame()).toThrowError(
+      "Can't start a game that has already started"
+    );
+  });
+
+  it("should not be able to start a game if it has been finished before", () => {
+    const mexico = new Team("mexico", [], "Mexico", "logo.png");
+    const canada = new Team("canada", [], "Canada", "logo.png");
+
+    const game = new Game("game1", mexico, canada);
+    game.startGame();
+    game.endGame();
+    expect(() => game.startGame()).toThrowError(
+      "Can't start a game that has already finished"
+    );
+  });
+
   it("should not start a game if it has already started", () => {
     const spain = new Team("spain", [], "Spain", "logo.png");
     const brazil = new Team("brazil", [], "Brazil", "logo.png");
@@ -65,6 +88,40 @@ describe("Game", () => {
     expect(game.isGameOn()).toBe(false);
   });
 
+  it("should not be able to end game that has not started", () => {
+    const mexico = new Team("mexico", [], "Mexico", "logo.png");
+    const canada = new Team("canada", [], "Canada", "logo.png");
+
+    const game = new Game("game1", mexico, canada);
+    expect(() => game.endGame()).toThrowError(
+      "Cannot end the game that has not started"
+    );
+  });
+
+  it("should not be able to end game during halftime", () => {
+    const spain = new Team("spain", [], "Spain", "logo.png");
+    const brazil = new Team("brazil", [], "Brazil", "logo.png");
+
+    const game = new Game("game1", spain, brazil);
+    game.startGame();
+    game.startHalfTime();
+    expect(() => game.endGame()).toThrowError(
+      "Cannot end the game during halftime"
+    );
+  });
+
+  it("should not be able to end game that has already ended", () => {
+    const mexico = new Team("mexico", [], "Mexico", "logo.png");
+    const canada = new Team("canada", [], "Canada", "logo.png");
+
+    const game = new Game("game1", mexico, canada);
+    game.startGame();
+    game.endGame();
+    expect(() => game.endGame()).toThrowError(
+      "Cannot end the game that has ended"
+    );
+  });
+
   it("should be able to add an update", () => {
     const spain = new Team("spain", [], "Spain", "logo.png");
     const brazil = new Team("brazil", [], "Brazil", "logo.png");
@@ -81,10 +138,9 @@ describe("Game", () => {
   });
 
   it("should return updates in the correct order", () => {
-    const fcb = new Team("fcb", [], "FC Barcelona", "logo.png");
-    const bayern = new Team("bayern", [], "FC Barcelona", "logo.png");
-
-    const game = new Game("game1", fcb, bayern);
+    const spain = new Team("spain", [], "Spain", "logo.png");
+    const brazil = new Team("brazil", [], "Brazil", "logo.png");
+    const game = new Game("game1", spain, brazil);
 
     game.startGame();
     game.addUpdate(new FootballUpdate("70", "Goal by Pablo Gavi."));

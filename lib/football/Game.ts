@@ -61,7 +61,13 @@ export class Game {
 
   endGame(): void {
     if (!this.started) {
+      throw new Error("Cannot end the game that has not started");
+    }
+    if (this.halfTime) {
       throw new Error("Cannot end the game during halftime");
+    }
+    if (this.finished) {
+      throw new Error("Cannot end the game that has ended");
     }
     this.finished = true;
     this.endTime = new Date().toISOString();

@@ -1,6 +1,6 @@
 # Football World Cup Scoreboard
 
-A simple football live updates library.
+A simple library for live football updates.
 
 ## Requirements
 

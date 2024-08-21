@@ -1,7 +1,7 @@
 {
   "name": "football-live-scores",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple football live scores app",
   "main": "index.js",
   "scripts": {
     "test": "vitest --watch"

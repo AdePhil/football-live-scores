@@ -1,8 +1,6 @@
-import { getTime } from "../utils";
 import Player from "./Player";
 import Team from "./Team";
 import Update from "./Update";
-import Venue from "./Venue";
 
 export class Game {
   private lineUps: Record<string, Player[]>;
@@ -16,19 +14,14 @@ export class Game {
   private halfTimeStart: string | null = null;
   private totalGameTime: number = 0;
 
-  constructor(
-    public id: string,
-    public teamOne: Team,
-    public teamTwo: Team,
-    public venue: Venue
-  ) {
+  constructor(public id: string, public homeTeam: Team, public awayTeam: Team) {
     this.lineUps = {
-      [teamOne.getId()]: [],
-      [teamTwo.getId()]: [],
+      [homeTeam.getId()]: [],
+      [awayTeam.getId()]: [],
     };
 
-    this.scores[teamOne.getId()] = 0;
-    this.scores[teamTwo.getId()] = 0;
+    this.scores[homeTeam.getId()] = 0;
+    this.scores[awayTeam.getId()] = 0;
   }
 
   startGame(): void {
@@ -67,7 +60,7 @@ export class Game {
   }
 
   endGame(): void {
-    if (this.halfTime) {
+    if (!this.started) {
       throw new Error("Cannot end the game during halftime");
     }
     this.finished = true;
@@ -96,8 +89,8 @@ export class Game {
     this.startTime = new Date().toISOString();
     this.endTime = null;
     this.updates = [];
-    this.scores[this.teamOne.getId()] = 0;
-    this.scores[this.teamTwo.getId()] = 0;
+    this.scores[this.homeTeam.getId()] = 0;
+    this.scores[this.awayTeam.getId()] = 0;
     this.totalGameTime = 0;
     this.halfTime = false;
     this.halfTimeStart = null;
@@ -117,6 +110,14 @@ export class Game {
 
   getUpdates(): Update[] {
     return this.updates;
+  }
+
+  updateHomeTeamScore(score: number): void {
+    this.updateScore(this.homeTeam.getId(), score);
+  }
+
+  updateAwayTeamScore(score: number): void {
+    this.updateScore(this.awayTeam.getId(), score);
   }
 
   addLineUp(teamId: string, players: Player[]): boolean {
@@ -149,11 +150,18 @@ export class Game {
     return this.scores[teamId];
   }
 
+  getScores(): [number, number] {
+    return [
+      this.getScore(this.homeTeam.getId()),
+      this.getScore(this.awayTeam.getId()),
+    ];
+  }
+
   toString(): string {
     const gameTime = this.getCurrentGameTime();
-    return `${this.teamOne.getName()} ${this.getScore(
-      this.teamOne.getId()
-    )} vs ${this.getScore(this.teamTwo.getId())} ${this.teamTwo.getName()} ${
+    return `${this.homeTeam.getName()} ${this.getScore(
+      this.homeTeam.getId()
+    )} vs ${this.getScore(this.awayTeam.getId())} ${this.awayTeam.getName()} ${
       gameTime > 0 ? `${gameTime}'` : ""
     }`;
   }

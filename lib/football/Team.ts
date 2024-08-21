@@ -11,6 +11,11 @@ class Team {
   getId() {
     return this.id;
   }
+
+  getLogo() {
+    return this.logo;
+  }
+
   getName() {
     return this.name;
   }
